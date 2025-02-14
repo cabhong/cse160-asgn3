@@ -55,7 +55,7 @@ class Cylinder {
         this.vertices = new Float32Array([...topVertices, ...bottomVertices, ...v]);
     }
 
-    render() {
+    renderfast() {
         let [r, g, b, a] = this.color;
 
 
