@@ -9,7 +9,7 @@ class Camera {
         this.up = new Vector3([0,1,0]);
         this.projectionMatrix = new Matrix4();
         this.viewMatrix = new Matrix4();
-        this.deltaTime = 0; // Convert to seconds
+        this.deltaTime = 0;
         this.lastTime = performance.now();
 
         this.updateMatrices();
@@ -138,7 +138,7 @@ class Camera {
 
     updateDeltaTime() {
         const currentTime = performance.now();
-        this.deltaTime = (currentTime - this.lastTime) / 1000; // Convert to seconds
+        this.deltaTime = (currentTime - this.lastTime) / 1000;
         this.lastTime = currentTime;
     }
 }

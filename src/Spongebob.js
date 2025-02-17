@@ -27,14 +27,40 @@ let spongeAnim = {
   
   
     eyeScaleY: 1,
-    rightEyeScaleY: 1
+    rightEyeScaleY: 1,
+
+    originX: 16,
+    originZ: 16,
+    originRot: 0
   }
 
+function animSpongeBob() {
+  spongeAnim.bodyTransY = Math.abs(((0.1*Math.sin(6*g_seconds))))
+  spongeAnim.leftUpperArmRotX = (85*Math.sin(6*g_seconds)+100)
+  spongeAnim.leftUpperArmRotY = -75
+  spongeAnim.leftLowerArmRotX = -75
+
+  spongeAnim.rightUpperArmRotX = (-85*Math.sin(6*g_seconds)-80)
+  spongeAnim.rightUpperArmRotY = 75
+  spongeAnim.rightLowerArmRotX = 75
+
+  spongeAnim.leftUpperLegRotX = (80*Math.sin(6*g_seconds))
+  spongeAnim.leftLowerLegRotX = -85
+
+  spongeAnim.rightUpperLegRotX = (-80*Math.sin(6*g_seconds))
+  spongeAnim.rightLowerLegRotX = -85
+  spongeAnim.eyeScaleY = Math.min((100*Math.cos(2*g_seconds) + 100), 1)
+
+  spongeAnim.originX = 16 - 2*Math.cos(2*g_seconds)
+  spongeAnim.originZ = 16 - 2*Math.sin(2*g_seconds)
+  spongeAnim.originRot = 0 - 2*g_seconds * (180/Math.PI)
+}
 
 
 function renderSpongeBob() {
-    let originMat = new Matrix4()
-
+  let originMat = new Matrix4()
+  originMat.translate(spongeAnim.originX,0.25,spongeAnim.originZ);
+  originMat.rotate(spongeAnim.originRot,0,1,0)
     let cube = new Cube(new Matrix4().set(originMat), [1,1,0,1], -2);
     cube.matrix.translate(0, spongeAnim.bodyTransY, 0)
     let bodyParent = new Matrix4().set(cube.matrix)
@@ -204,6 +230,9 @@ function renderSpongeBob() {
     rightHand.matrix.rotate(spongeAnim.rightHandRotY,0,0,1)
 
     rightHand.matrix.translate(-0.5,0,-0.5)
+
+  
+
     cube.renderfast()
 
     mouth.renderfast()
@@ -212,13 +241,35 @@ function renderSpongeBob() {
 
     tooth2.renderfast()
 
-    nose.renderfast();
 
     pantsWhite.renderfast()
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    rightShoe.renderfast()
     pantsTie.renderfast()
 
+    upperRightLeg.renderfast();
+
     pantsBrown.renderfast()
+
+    lowerRightLeg.renderfast();
+
+    leftUpperWhiteArm.renderfast();
+
+    leftUpperArm.renderfast(); 
+
+    leftLowerArm.renderfast();
+
+    leftShoe.renderfast()
 
     leftEyeWhite.renderfast();
 
@@ -232,23 +283,7 @@ function renderSpongeBob() {
 
     blackrightEye.renderfast();
 
-    upperLeftLeg.renderfast();
-
-    lowerLeftLeg.renderfast();
-
-    leftShoe.renderfast()
-
-    upperRightLeg.renderfast();
-
-    lowerRightLeg.renderfast();
-
-    rightShoe.renderfast()
-
-    leftUpperWhiteArm.renderfast();
-
-    leftUpperArm.renderfast(); 
-
-    leftLowerArm.renderfast();
+    nose.renderfast();
 
     leftHand.renderfast()
 
@@ -260,4 +295,9 @@ function renderSpongeBob() {
 
     rightHand.renderfast()
 
+    upperLeftLeg.renderfast();
+
+    lowerLeftLeg.renderfast();
+
+    upperRightLeg.renderfast();
 }

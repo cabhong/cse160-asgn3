@@ -11,29 +11,49 @@
     Please use a browser that supports "canvas"
     </canvas>
     <div><p id="fps">FPS: </p></div>
-    <p>Casey Hong</p>
-    <p>cabhong@ucsc.edu</p>
-    <p>Notes</p>
-    <ul>
-    </ul>
-
-    
-    <div>
-      <p>Animated</p> <input id="animation" checked type="checkbox" onclick="handleAnimationToggle(event)" />
-    </div>
-    <div>
-      
-      <p>Camera Rotation</p>
-      x:
-      <input id="x" value="0" type="range" type="range" max ="360" min="0" step="any" oninput="handleRotationChange(event)" />
-      y:
-      <input id="y" value="0" type="range" type="range" max ="360" min="0" step="any" oninput="handleRotationChange(event)" />
-    </div>
     <div>
       <p id = "sens">Sensitivity: </p>
       <input id="sensitivity" value="0.6" type="range" type="range" max ="4" min="0" step="any" oninput="handleSensChange(event)">
 
     </div>
+    <p>Casey Hong</p>
+    <p>cabhong@ucsc.edu</p>
+    <p>Notes</p>
+    <ul>
+      <li>TURN ON GRAPHICS ACCELERATION IN BROWSER</li>
+      <li>Controls:
+        <ul>
+          <li>WASD - Camera Movement</li>
+          <li>Move Mouse/QE to Pan Camera</li>
+          <li>Space/R - Fly Up/Fly Down</li>
+          <li>Left/Right Click - Destroy/Build</li>
+          <li>1-4 on keyboard to pick block (Any number not in that range will be an error block)
+            <ul>
+              <li>1: Grass</li>
+              <li>2: Wood Plank</li>
+              <li>3: Wood Log</li>
+              <li>4: Leaves</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Story
+        <ul>
+          <li>Spongebob is freaking out because he got magically transported into Minecraft D:</li>
+          <li>Squidwards house also got teleported</li>
+          <li>He also saw no leaves on some of the trees (herobrine iykyk)</li>
+        </ul>
+      </li>
+      <li>Wow
+        <ul>
+          <li>Made OBJ Loader as seen on Squidward's house</li>
+          <li>House model from: <a href="https://sketchfab.com/3d-models/squidwards-house-low-poly-b247a10ed6b14bac91cf2f2bd13e2b94">here</a></li>
+        </ul>
+      </li>
+    </ul>
+
+  
+    
     <div>
     <div>
     
@@ -54,5 +74,6 @@
     <script src="Camera.js"></script>
     <script src="Map.js"></script>
     <script src="Spongebob.js"></script>
+    <script src="OBJLoader.js"></script>
   </body>
 </html>

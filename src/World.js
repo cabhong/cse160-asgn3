@@ -27,6 +27,7 @@ var FSHADER_SOURCE =
   uniform sampler2D u_Sampler2;
   uniform sampler2D u_Sampler3;
   uniform sampler2D u_Sampler4;
+  uniform sampler2D u_Sampler10;
   uniform int u_whichTexture;
   void main() {
     if(u_whichTexture == -2) {
@@ -46,6 +47,9 @@ var FSHADER_SOURCE =
     }
     else if(u_whichTexture == 4) {
       gl_FragColor = texture2D(u_Sampler4, v_UV);
+    }
+    else if(u_whichTexture == 10) {
+      gl_FragColor = texture2D(u_Sampler10, v_UV);
     }  
     else {
       gl_FragColor = vec4(1, 0.2, 0.2, 1); 
@@ -67,6 +71,7 @@ let u_Sampler1;
 let u_Sampler2;
 let u_Sampler3;
 let u_Sampler4;
+let u_Sampler10;
 let u_whichTexture;
 let size = 10;
 let camera;
@@ -85,6 +90,7 @@ let rgba = {
 let g_animation = true;
 let shiftAnim = false;
 let currentBlock = 1;
+let squidwardsHouse;
 
 
 function setupWebGL() {
@@ -181,6 +187,12 @@ function connectVariablesToGLSL() {
     return false;
   }
 
+  u_Sampler10 = gl.getUniformLocation(gl.program, 'u_Sampler10');
+  if (!u_Sampler10) {
+    console.log('Failed to get the storage location of u_Sampler10');
+    return false;
+  }
+
   u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
   if (!u_whichTexture) {
     console.log('Failed to get the storage location of u_whichTexture');
@@ -239,6 +251,16 @@ function initTextures() {
   }
   leaves.onload = function(){ sendImageToTEXTUREn(4, leaves); };
   leaves.src = './mats/leaves.jpg'
+
+  var squidward = new Image()
+  if(!squidward){
+    console.log('Failed to create the squidward object');
+    return false;
+  }
+  squidward.onload=function() {
+    sendImageToTEXTUREn(10, squidward);
+  }
+  squidward.src = './mats/squidward.png'
 
   return true;
 }
@@ -329,8 +351,8 @@ function sendImageToTEXTUREn(n, image) {
     gl.bindTexture(gl.TEXTURE_2D, texture3);
 
     // Set the texture parameters
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     // Set the texture image
@@ -362,6 +384,29 @@ function sendImageToTEXTUREn(n, image) {
     // Set the texture unit 0 to the sampler
     gl.uniform1i(u_Sampler4, 4);
   }
+  else if (n === 10) {
+    var texture5 = gl.createTexture();   // Create a texture object
+    if (!texture5) {
+      console.log('Failed to create the texture object');
+      return false;
+    }
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
+    // Enable texture unit0
+    gl.activeTexture(gl.TEXTURE5);
+    // Bind the texture object to the target
+    gl.bindTexture(gl.TEXTURE_2D, texture5);
+
+    // Set the texture parameters
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    // Set the texture image
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    
+    // Set the texture unit 0 to the sampler
+    gl.uniform1i(u_Sampler10, 5);
+  }
   
 
   console.log('finished loadTexture');
@@ -389,6 +434,10 @@ function main() {
     keyReleased(ev);
   }
 
+  squidwardsHouse = new OBJ("./SquidwardsHouse.obj", new Matrix4())
+  squidwardsHouse.matrix.translate(5,0,5)
+  
+
   canvas.onmousedown = async function(ev) {
     await canvas.requestPointerLock({
       unadjustedMovement: true,
@@ -396,19 +445,11 @@ function main() {
     prevX = ev.clientX
     prevY = ev.clientY
     console.log(ev)
-    if(ev.shiftKey) {
-      shiftAnim = !shiftAnim
-    }
     if(ev.button === 2) placeBlock();
     if(ev.button === 0) destroyBlock();
-    // console.log(prevX)
   }
   canvas.onmousemove = function(ev) {
-    // console.log(ev);
     camera.rotateCamera(ev.movementX, ev.movementY);
-    // if(ev.buttons == 1) {
-    //   click(ev);
-    // }
   }
 
   // Specify the color for clearing <canvas>
@@ -501,8 +542,6 @@ function renderScene() {
   sky.renderfast();
 
 
-  drawMap();
-
 
   let forwardVec = new Vector3().set(camera.at);
   forwardVec.sub(camera.eye)
@@ -514,14 +553,10 @@ function renderScene() {
   lookingCube.matrix.translate(-0.5, -0.5, -0.5)
   lookingCube.renderfast();
 
-  // let cube1 = new Cube(new Matrix4().set(globalRotMat), [1,1,1,1], 1)
-  // cube1.matrix.translate(0, -1, 0)
-  // cube1.matrix.scale(51,1,51)
-  // cube1.matrix.translate(-0.5, -0.5, -0.5)
-  // cube1.renderfast(); 
   
   drawMap();
   renderSpongeBob();
+  squidwardsHouse.renderfast();
 }
 
 
@@ -544,6 +579,7 @@ function updateAnimationAngles() {
   // }
   // else if (g_animation) {
   // }
+  animSpongeBob();
   camera.moveCamera();
   camera.panLeft();
   camera.panRight();

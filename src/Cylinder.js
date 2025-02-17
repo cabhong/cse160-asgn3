@@ -8,6 +8,7 @@ class Cylinder {
         this.matrix = matrix
         this.buffer = null;
         this.vertices = null;
+        this.bufferSize = 0;
     }
 
     generateVertices() {
@@ -56,9 +57,8 @@ class Cylinder {
     }
 
     renderfast() {
+        gl.disableVertexAttribArray(a_UV);
         let [r, g, b, a] = this.color;
-
-
         
         // Pass the color of a point to uFragColor variable
         gl.uniform4f(u_FragColor, r, g, b, a);
@@ -84,14 +84,14 @@ class Cylinder {
         // Write date into the buffer object
         gl.bufferData(
             gl.ARRAY_BUFFER,
-            new Float32Array(this.vertices),
+            this.vertices,
             gl.DYNAMIC_DRAW
         );
 
 
         // Assign the buffer object to a_Position variable
     gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
-  
+        
     // Enable the assignment to a_Position variable
     gl.enableVertexAttribArray(a_Position);
         gl.drawArrays(gl.TRIANGLES, 0, this.vertices.length / 3);

@@ -101,14 +101,16 @@ var g_vertexBuffer = null;
 var g_uvBuffer=null;
 function drawTriangle3DUV(vertices, uv) {
   var n = vertices.length/3; // The number of vertices
-  if(g_vertexBuffer == null) {
+  if(g_vertexBuffer == null || g_uvBuffer == null) {
     initTriangle3D()
   }
-  
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, g_vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
+  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(a_Position);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, g_uvBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.DYNAMIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, uv, gl.DYNAMIC_DRAW);
   gl.vertexAttribPointer(a_UV, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(a_UV);
 
@@ -128,14 +130,15 @@ function initTriangle3D() {
     return -1;
   }
   // Bind the buffer object to target
-  gl.bindBuffer(gl.ARRAY_BUFFER, g_vertexBuffer);
+  
   // Write date into the buffer object
   
   
     // Assign the buffer object to a_Position variable
-  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
+  
   
     // Enable the assignment to a_Position variable
-  gl.enableVertexAttribArray(a_Position);
+  
 }
+
     
